@@ -1,0 +1,65 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+
+void processGrades(int *matrix, int numStudents, int numSubjects) {
+    
+    cout << "\n--- Student Grade Matrix ---\n";
+    cout << setw(10) << "Student";
+    for (int j = 0; j < numSubjects; j++) {
+        cout << setw(8) << "Sub " << j+1;
+    }
+    cout << endl;
+
+    for (int i = 0; i < numStudents; i++) {
+        cout << setw(10) << "Student " << i+1;
+        int sum = 0;
+        for (int j = 0; j < numSubjects; j++) {
+            
+            int grade = *(matrix + i * numSubjects + j);
+            cout << setw(8) << grade;
+            sum += grade;
+        }
+        
+        double avg = static_cast<double>(sum) / numSubjects;
+        cout << setw(10) << fixed << setprecision(2) << avg << endl;
+    }
+
+    
+    int highest = *matrix;
+    for (int i = 0; i < numStudents * numSubjects; i++) {
+        if (*(matrix + i) > highest) {
+            highest = *(matrix + i);
+        }
+    }
+    cout << "\nHighest grade in the matrix: " << highest << endl;
+}
+
+int main() {
+    int numStudents, numSubjects;
+
+    
+    cout << "Enter number of students: ";
+    cin >> numStudents;
+    cout << "Enter number of subjects: ";
+    cin >> numSubjects;
+
+  
+    int grades[numStudents][numSubjects];
+
+    
+    cout << "\nEnter grades for each student and subject:\n";
+    for (int i = 0; i < numStudents; i++) {
+        cout << "Enter grades for Student " << i+1 << " (separated by spaces): ";
+        for (int j = 0; j < numSubjects; j++) {
+            cin >> grades[i][j];
+        }
+    }
+
+    
+    processGrades(&grades[0][0], numStudents, numSubjects);
+
+    return 0;
+}

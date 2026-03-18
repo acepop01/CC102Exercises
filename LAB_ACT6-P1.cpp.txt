@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string>
+#include <iomanip> 
+
+using namespace std;
+
+struct Student {
+    string studentID;
+    string name;
+    string course;
+    float gpa;
+};
+
+bool isIDUnique(const Student students[], int count, string id) {
+    for (int i = 0; i < count; i++) {
+        if (students[i].studentID == id) {
+            return false; // ID exists
+        }
+    }
+    return true;
+}
+
+string getStanding(float gpa) {
+    if (gpa >= 90 && gpa <= 100) {
+        return "Excellent";
+    } else if (gpa >= 80 && gpa < 90) {
+        return "Very Good";
+    } else if (gpa >= 70 && gpa < 80) {
+        return "Good";
+    } else if (gpa >= 60 && gpa < 70) {
+        return "Passing";
+    } else {
+        return "Failed";
+    }
+}
+
+int main() {
+    char runAgain;
+
+    do {
+        int numStudents;
+    
+        cout << "Enter number of students: ";
+        cin >> numStudents;
+        cin.ignore(); // Clear input buffer
+
+        Student* students = new Student[numStudents];
+
+        for (int i = 0; i < numStudents; i++) {
+            cout << "\n--- Enter details for Student " << (i + 1) << " ---" << endl;
+
+           
+            cout << "\nStudent ID must be unique." << endl;
+            cout << "Before storing the record, existing records will be checked." << endl;
+
+           
+            do {
+                cout << "\nStudent ID: ";
+                getline(cin, students[i].studentID);
+                if (!isIDUnique(students, i, students[i].studentID)) {
+                   
+                    cout << "ERROR: Student ID already exists! Please enter another ID." << endl;
+                }
+            } while (!isIDUnique(students, i, students[i].studentID));
+
+       
+            cout << "Name: ";
+            getline(cin, students[i].name);
+
+            cout << "Course: ";
+            getline(cin, students[i].course);
+
+           
+            do {
+                cout << "GPA (0-100): ";
+                cin >> students[i].gpa;
+                if (students[i].gpa < 0 || students[i].gpa > 100) {
+                    cout << "ERROR: GPA must be between 0 and 100! Try again." << endl;
+                }
+            } while (students[i].gpa < 0 || students[i].gpa > 100);
+            cin.ignore(); // Clear buffer for next input
+        }
+
+       
+        cout << "\n\n------------------------ STUDENT ACADEMIC RECORDS ------------------------" << endl;
+        cout << setw(15) << left << "Student ID" 
+             << setw(20) << left << "Name" 
+             << setw(15) << left << "Course" 
+             << setw(10) << left << "GPA" 
+             << setw(15) << left << "Standing" << endl;
+        cout << "-------------------------------------------------------------------------" << endl;
+
+        for (int i = 0; i < numStudents; i++) {
+            cout << setw(15) << left << students[i].studentID
+                 << setw(20) << left << students[i].name
+                 << setw(15) << left << students[i].course
+                 << setw(10) << left << fixed << setprecision(2) << students[i].gpa
+                 << setw(15) << left << getStanding(students[i].gpa) << endl;
+        }
+        cout << "-------------------------------------------------------------------------" << endl;
+
+       
+        delete[] students;
+
+        cout << "\nDo you want to run the program again? (Y/N): ";
+        cin >> runAgain;
+        cin.ignore(); // Clear buffer
+        cout << endl;
+
+    } while (runAgain == 'Y' || runAgain == 'y');
+
+    cout << "Program terminated. Thank you!" << endl;
+    return 0;
+}
